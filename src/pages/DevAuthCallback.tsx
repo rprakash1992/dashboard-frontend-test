@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { handleOAuthCallback } from "../utils/devAuth";
+import { handleOAuthCallback } from "../utils/auth";
 
 export const DevAuthCallback = () => {
   const navigate = useNavigate();
