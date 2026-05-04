@@ -1,0 +1,16 @@
+/* action panel */
+.actionPanelContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.breadcrumsContainer {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  overflow: hidden;
+}

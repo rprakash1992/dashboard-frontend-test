@@ -1,0 +1,8 @@
+.activitesFadeIn {
+  box-shadow: "0px 0px 5px rgb(24, 100, 171)";
+}
+
+.activitesFadeOut {
+  box-shadow: "unset";
+  transition: "5s ease box-shadow";
+}

@@ -1,0 +1,70 @@
+.flexlayout__layout {
+  --color-background: transparent;
+}
+
+.flexlayout__tab {
+    background-color: transparent !important;
+}
+
+.flexlayout__tabset {
+  background-color: transparent;
+}
+
+/* .flexlayout__tab_button--selected {
+  background-color: transparent !important;
+} */
+
+.flexlayout__tabset_tabbar_outer {
+  background-color: transparent;
+  background-image: none;
+}
+
+/* .flexlayout__tab_button {
+  padding: 0;
+  box-shadow: none;
+}
+
+.flexlayout__tab_button:hover {
+  background-color: transparent;
+} */
+
+.flexlayout__border {
+  background-color: transparent;
+}
+
+/* .flexlayout__border_button {
+  margin: 0;
+  height: 34.8px;
+} */
+
+.flexlayout__tab_button {
+  padding-top: 12.5px;
+  padding-bottom: 12.5px;
+}
+
+.flexlayout__border_toolbar_left {
+  display: none;
+}
+
+/* The tab container is position:absolute, rotated -90deg. Its CSS width (= screen height)
+   is set by JS inline style. We override to the full sidebar height so margin-right:auto
+   has room to push bottom tabs down. */
+.flexlayout__border_inner_tab_container_left {
+  /* width: calc(100vh - 74px) !important; */
+  /* width: calc(100vh - 10px) !important; */
+  width: 100vh !important;
+  overflow: visible !important;
+}
+
+/* The library's JS uses getBoundingClientRect to detect tabs outside the strip bounds
+   and shows them in an overflow dropdown. With margin-right:auto the bottom tabs render
+   past the strip's bottom screen edge, triggering this. Hiding the overflow button keeps
+   all tabs visible in their correct positions. */
+.flexlayout__border_toolbar_button_overflow {
+  display: none !important;
+}
+
+/* Push bottom tabs down — nth-child = index of the first tab that should appear at the bottom */
+.flexlayout__border_inner_tab_container_left .flexlayout__border_button:nth-child(21) {
+  margin-right: auto;
+}

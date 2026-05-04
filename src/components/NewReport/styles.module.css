@@ -1,0 +1,24 @@
+.searchBoxDropdownItem {
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.searchBoxDropdownItemDark {
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.searchBoxDropdownItemDark:hover {
+  background-color: #242424;
+}
+
+.searchBoxDropdownItemLight {
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.searchBoxDropdownItemLight:hover {
+  background-color: #f8f9fa;
+}

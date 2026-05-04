@@ -1,0 +1,135 @@
+import { useState } from "react";
+import { useHover } from "@mantine/hooks";
+import { Group, List, Text, TextInput, Tooltip } from "@mantine/core";
+
+import {
+  VCCloseIcon,
+  VCEditIcon,
+  VCPinFilledIcon,
+  VCPinIcon,
+} from "../../assets/icons";
+import { useCustomColors } from "../../customHooks/useCustomColors";
+
+interface OneViewItemProps {
+  title: string;
+  active: boolean;
+  pinned: boolean;
+  selectView: () => void;
+  togglePinView: () => void;
+  renameView: (newTitle: string) => void;
+}
+
+export const OneViewItem = ({
+  title,
+  active,
+  pinned,
+  selectView,
+  togglePinView,
+  renameView,
+}: OneViewItemProps) => {
+  const [isRenaming, setIsRenaming] = useState<boolean>(false);
+  const [newViewTitle, setNewViewTitle] = useState<string>("");
+  const { hovered, ref } = useHover();
+  const { hoverColor } = useCustomColors();
+  const excludedItem =
+    title?.toLowerCase() === "all" || title?.toLowerCase() === "uploads" || title?.toLowerCase() === "workflows";
+
+  const Icon = pinned ? VCPinFilledIcon : VCPinIcon;
+  const iconLabel = pinned ? "Unpin" : "Pin";
+
+  const onPinClick = (e: any) => {
+    e.stopPropagation();
+    togglePinView();
+  };
+
+  const onRenameClick = (e: any) => {
+    e.stopPropagation();
+    setIsRenaming(true);
+    setNewViewTitle(title);
+  };
+
+  const onCloseClick = () => {
+    setIsRenaming(false);
+    setNewViewTitle("");
+  };
+
+  const submitRenameView = (e: any) => {
+    if (e.key === "Escape") {
+      setIsRenaming(false);
+    }
+    if (e.key === "Enter") {
+      renameView(newViewTitle);
+      setNewViewTitle("");
+      setIsRenaming(false);
+    }
+  };
+
+  return (
+    <List.Item
+      styles={{
+        itemWrapper: {
+          width: "100%",
+        },
+        itemLabel: {
+          display: "block",
+          width: "100%",
+        },
+      }}
+      h="32px"
+      style={{
+        cursor: "pointer",
+        backgroundColor: active ? hoverColor : "unset",
+      }}
+    >
+      {isRenaming ? (
+        <Group
+          h="32px"
+          px="5px"
+          align="center"
+          justify="space-between"
+          gap="xs"
+        >
+          <TextInput
+            styles={{
+              input: {
+                height: "30px",
+                minHeight: "30px",
+              },
+            }}
+            placeholder="Enter New Title.."
+            value={newViewTitle}
+            onChange={(e) => setNewViewTitle(e.target.value)}
+            onKeyUp={submitRenameView}
+            autoFocus
+          />
+          <VCCloseIcon cursor="pointer" onClick={onCloseClick} />
+        </Group>
+      ) : (
+        <Group
+          ref={ref}
+          h="32px"
+          px="15px"
+          align="center"
+          justify="space-between"
+          onClick={selectView}
+          style={{
+            backgroundColor: active || hovered ? hoverColor : "unset",
+            cursor: "pointer",
+          }}
+        >
+          <Text size="0.875rem">{title}</Text>
+          {hovered && !excludedItem && (
+            <Group gap="2px" justify="center" align="center">
+              <Tooltip label="Rename">
+                <VCEditIcon size={22} stroke={1} onClick={onRenameClick} />
+              </Tooltip>
+              <Tooltip label={iconLabel}>
+                <Icon size={22} stroke={1} onClick={onPinClick} />
+              </Tooltip>
+            </Group>
+          )}
+        </Group>
+      )}
+    </List.Item>
+  );
+};

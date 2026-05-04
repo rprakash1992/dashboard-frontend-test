@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Email Confirmation</title>
+  </head>
+  <body>
+    <p><b>Dear {{.Data.name}},</b></p>
+    <br />
+    <p>
+      Thank you for registering with VCOLLAB.AI. We have
+      received a registration request from below mentioned credentials.
+    </p>
+    <p style="margin-bottom: 0; padding-bottom: 0">Name: {{.Data.name}}</p>
+    <p style="margin-top: 0; padding-top: 0">Email: {{.Data.email}}</p>
+    <p>If not you, please ignore this email.</p>
+    <p>Otherwise, complete your registration by clicking the link below:</p>
+    <p><a href="https://db.vcollab.ai/auth/v1/verify?token={{ .TokenHash }}&type=signup&redirect_to=https://dev.vcollab.ai/confirm-email">Verify your email address</a></p>
+    <br />
+    <p>Best regards,</p>
+    <p>VCOLLAB.AI Team</p>
+  </body>
+</html>

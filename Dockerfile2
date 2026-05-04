@@ -1,0 +1,43 @@
+# Dockerfile
+# Step 1: Build the React app
+FROM node:18 AS build
+
+# set env vars
+ENV REACT_APP_VIEWER_URL https://vcollabenterprise-dev.onrender.com/viewer.html
+ENV REACT_APP_URL_PREFIX file://C:/Work/enterprise-1.1-win64/
+ENV REACT_APP_API_LOCATION https://enterprise-backend.vcollab.com/api/1.0/model
+ENV REACT_APP_API_SERVER_URL https://vcollab-enterprise-dashboard-backend.sliplane.app
+ENV REACT_APP_WCAXVIEWER_URL https://dev.vcollab.ai/wcaxviewer
+ENV REACT_APP_ENTERPRISE_VIEWER_URL https://dev.vcollab.ai/enterpriseviewer?serverurl=https://oonodkhsxgxoxaiwdrvp.supabase.co&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vbm9ka2hzeGd4b3hhaXdkcnZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODA3ODMwOTgsImV4cCI6MTk5NjM1OTA5OH0.Dtp-tlezahlMdUcie0q7hbD4Ct7Y4Ivd3awT-zcFnF8&roleid=analyst&reportid=570&api=https://enterprise-backend.vcollab.com/api/1.0/model&url=file://C:/Work/enterprise-1.1-win64/samples/Airbag.cax#/
+ENV REACT_APP_CRAFT_VIEWER_URL https://dev.vcollab.ai/craftviewer
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json for npm install
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the app
+COPY . .
+
+# Build the React app
+RUN npm run build
+
+FROM nginx:1.21.0-alpine as production
+
+ENV NODE_ENV production
+
+# Add your nginx.conf
+COPY src/config/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built assets from builder
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
