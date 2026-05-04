@@ -1,4 +1,4 @@
-import { API_SERVER_URL, FRONTEND_URL, GOOGLE_CLIENT_ID } from "../config/keys";
+import { FRONTEND_URL, GOOGLE_CLIENT_ID, API_SERVER_V1 } from "../config/keys";
 
 // const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
 // const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
@@ -26,7 +26,7 @@ export function redirectToGoogleLogin(): void {
 }
 
 export async function handleOAuthCallback(code: string): Promise<void> {
-  const res = await fetch(`${API_SERVER_URL}/auth/google/callback`, {
+  const res = await fetch(`${API_SERVER_V1}/auth/google/callback`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code }),
