@@ -13,7 +13,7 @@ async function getToken(): Promise<string | null> {
   if (window.electronAPI) {
     return await window.electronAPI.getAccessToken();
   }
-  if (isDevMode) {
+  if (isDevMode || isProdMode) {
     return getDevToken();
   }
   return null;
