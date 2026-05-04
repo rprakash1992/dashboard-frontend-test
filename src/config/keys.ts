@@ -10,6 +10,7 @@ const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const googleClientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
 
 export const isDevMode = mode === "local";
+export const isProdMode = mode === "production";
 export const API_SERVER_URL = serverUrl;
 export const ENTERPRISE_VIEWER_URL = enterpriseViewerUrl;
 export const CRAFT_VIEWER_URL = craftViewerUrl;

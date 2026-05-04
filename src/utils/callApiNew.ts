@@ -1,5 +1,5 @@
 import { getDevToken, redirectToGoogleLogin, clearDevToken } from "./auth";
-import { isDevMode } from "../config/keys";
+import { isDevMode, isProdMode } from "../config/keys";
 
 interface CallApiProps {
   URL: string | URL;
@@ -52,6 +52,9 @@ export const CallApiNew = async function ({
   // }
   if (response.status === 401) {
     if (isDevMode) {
+      clearDevToken();
+      redirectToGoogleLogin();
+    } else if (isProdMode) {
       clearDevToken();
       redirectToGoogleLogin();
     } else {
