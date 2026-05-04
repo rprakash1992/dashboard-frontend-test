@@ -43,7 +43,8 @@ const NotFoundComponent = () => (
 
 const NewReport = () => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
+  const setNewItemMetadata = useStore((state) => state.setNewItemMetadata);
   const [reportTitle, setReportTitle] = useState<string>("New Report");
   const [reportDesc, setReportDesc] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
@@ -103,7 +104,7 @@ const NewReport = () => {
     try {
       const selectedProjectId = newReportItem?.projectItem?.id;
 
-      const { error: newReportErr } = await reportApi.insertReport(
+      const { data, error: newReportErr } = await reportApi.insertReport(
         reportTitle,
         reportDesc,
         "",
@@ -123,7 +124,8 @@ const NewReport = () => {
       // } as NewReportItemType);
       resetData();
       setDialogBoxMsg("Report added.", AlertMsgType.SUCCESS);
-      addReloadComponent("report");
+      setNewItemMetadata(data.item);
+      // addReloadComponent("report");
     } catch (err) {
       setDialogBoxMsg(String(err), AlertMsgType.ERROR);
     } finally {

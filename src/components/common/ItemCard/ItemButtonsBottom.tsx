@@ -9,6 +9,7 @@ import {
   VCUsersIcon,
   VCJobsInfoIcon,
   VCAIAssistantIcon,
+  VCPermissionIcon,
 } from "../../../assets/icons";
 import { IconRenderer } from "../../IconRenderer/IconRenderer";
 import { getWorkspaceId } from "../../../utils/getWorkspaceId";
@@ -101,6 +102,14 @@ const aiAssistant: IconType = {
   icon: VCAIAssistantIcon,
 };
 
+const permissions: IconType = {
+  iconName: "permissions",
+  id: "permissions",
+  route: "permissions",
+  tooltip: "Permissions",
+  icon: VCPermissionIcon,
+};
+
 // const icons: Record<string, IconType[]> = {
 //   file: [info, traceability, activity, share],
 //   project: [info, traceability, activity, share, aiAssistant],
@@ -118,7 +127,7 @@ const icons: Record<string, IconType[]> = {
   report: [info, traceability, share],
   workspace: [info, users],
   user_profile: [info, status],
-  role: [info],
+  role: [info, permissions],
   workflow: [info, traceability],
   job: [info, traceability, jobInfo],
 };

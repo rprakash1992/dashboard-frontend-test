@@ -11,7 +11,10 @@ export const useItemActions = (fileItems: File[]) => {
   const navigate = useNavigate();
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   const setShowCommentBox = useStore((state) => state.setShowCommentBox);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
+  const setRemoveItemMetadata = useStore(
+    (state) => state.setRemoveItemMetadata,
+  );
   const setIsDeletingItem = useStore((state) => state.setIsDeletingItem);
   const setIsDownloadingItem = useStore((state) => state.setIsDownloadingItem);
   const setIsOpeningItem = useStore((state) => state.setIsOpeningItem);
@@ -32,7 +35,8 @@ export const useItemActions = (fileItems: File[]) => {
     const { error } = await itemApi.deleteItemById(item.id, item.item_type);
     if (error) return setDialogBoxMsg(error, AlertMsgType.ERROR);
     setDialogBoxMsg("Item deleted successfully.", AlertMsgType.SUCCESS);
-    addReloadComponent(item.item_type);
+    setRemoveItemMetadata(item);
+    // addReloadComponent(item.item_type);
     setIsDeletingItem(null);
   };
 

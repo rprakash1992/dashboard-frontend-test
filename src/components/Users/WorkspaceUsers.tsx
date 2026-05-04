@@ -4,11 +4,11 @@ import debounce from "lodash/debounce";
 import { useStore } from "../../store";
 import { InfoPanel } from "../InfoPanel";
 import { userProfileApi } from "../../apiActions/userProfileApi";
-import { itemApi } from "../../apiActions/itemApi";
+// import { itemApi } from "../../apiActions/itemApi";
 import type { ItemMetadataType } from "../../types";
 import { workspaceApi } from "../../apiActions/workspaceApi";
 import { AlertMsgType } from "../../store/actionSlice";
-import { getWorkspaceId } from "../../utils/getWorkspaceId";
+// import { getWorkspaceId } from "../../utils/getWorkspaceId";
 import { LoadingComponent } from "../LoadingComponent/LoadingComponent";
 import { SubmitButton } from "../common/SubmitButton/SubmitButton";
 import { MaxWidthContainer } from "../common/MaxWidthContainer/MaxWidthContainer";
@@ -20,7 +20,7 @@ interface WorkspaceUsersProps {
 export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
   const allRoles = useStore((state) => state.allRoles);
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
-  const myWorkspaces = useStore((state) => state.myWorkspaces);
+  // const myWorkspaces = useStore((state) => state.myWorkspaces);
   const [loadingAddUser, setLoadingAddUser] = useState<boolean>(false);
   const [workspaceUsers, setWorkspaceUsers] = useState<ItemMetadataType[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -29,11 +29,11 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [isFetchingUsers, setIsFecthingUsers] = useState<boolean>(true);
-  const workspaceId = getWorkspaceId();
+  // const workspaceId = getWorkspaceId();
 
-  const selectedWorkspace = myWorkspaces.find(
-    (ws) => String(ws.id) === String(workspaceId),
-  );
+  // const selectedWorkspace = myWorkspaces.find(
+  //   (ws) => String(ws.id) === String(workspaceId),
+  // );
 
   const roleData = useMemo(
     () => allRoles.map((role) => ({ label: role.title, value: role.id })),
@@ -59,7 +59,8 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
   const getWorkspaceUsers = async () => {
     try {
       setIsFecthingUsers(true);
-      const { data, error } = await itemApi.fetchDashboardItems("user_profile");
+      // const { data, error } = await itemApi.fetchDashboardItems("user_profile");
+      const { data, error } = await workspaceApi.fetchWorkspaceUsers(itemId);
 
       if (error) {
         return setDialogBoxMsg(error, AlertMsgType.ERROR);
@@ -115,6 +116,7 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
       setLoadingAddUser(true);
 
       const { error, data } = await workspaceApi.addUserToWorkspace(
+        itemId,
         selectedUserId,
         selectedRoleId,
       );
@@ -151,41 +153,41 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
             />
           ))}
         </Box>
-        {selectedWorkspace?.system_key !== "user_personal_workspace" && (
-          <Box>
-            <Select
-              label="User:"
-              placeholder="Search user..."
-              data={searchData}
-              searchable
-              nothingFoundMessage={
-                isSearching ? "Searching..." : "No user found..."
-              }
-              searchValue={searchValue}
-              onSearchChange={setSearchValue}
-              onChange={setSelectedUserId}
-              checkIconPosition="right"
-              mb="10px"
-              mt={0}
-            />
-            <Select
-              label="Role:"
-              placeholder="Select Role"
-              data={roleData}
-              nothingFoundMessage="No role found..."
-              onChange={setSelectedRoleId}
-              checkIconPosition="right"
-              mb="10px"
-              mt={0}
-            />
-            <SubmitButton
-              label="Add"
-              onSubmit={addUser}
-              isLoading={loadingAddUser}
-              isDisabled={loadingAddUser}
-            />
-          </Box>
-        )}
+        {/* {selectedWorkspace?.system_key !== "user_personal_workspace" && ( */}
+        <Box>
+          <Select
+            label="User:"
+            placeholder="Search user..."
+            data={searchData}
+            searchable
+            nothingFoundMessage={
+              isSearching ? "Searching..." : "No user found..."
+            }
+            searchValue={searchValue}
+            onSearchChange={setSearchValue}
+            onChange={setSelectedUserId}
+            checkIconPosition="right"
+            mb="10px"
+            mt={0}
+          />
+          <Select
+            label="Role:"
+            placeholder="Select Role"
+            data={roleData}
+            nothingFoundMessage="No role found..."
+            onChange={setSelectedRoleId}
+            checkIconPosition="right"
+            mb="10px"
+            mt={0}
+          />
+          <SubmitButton
+            label="Add"
+            onSubmit={addUser}
+            isLoading={loadingAddUser}
+            isDisabled={loadingAddUser}
+          />
+        </Box>
+        {/* )} */}
       </Flex>
     </MaxWidthContainer>
   );

@@ -24,12 +24,18 @@ export const useItemListData = (viewId: string) => {
   const viewProperties = useStore((state) => state.viewProperties);
   const reloadComponents = useStore((state) => state.reloadComponents);
   const fileUploads = useStore((state) => state.fileUploads);
+  const updatedItemMetadata = useStore((state) => state.updatedItemMetadata);
+  const newItemMetadata = useStore((state) => state.newItemMetadata);
+  const removeItemMetadata = useStore((state) => state.removeItemMetadata);
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   const setFileUploads = useStore((state) => state.setFileUploads);
   const removeReloadComponent = useStore(
     (state) => state.removeReloadComponent,
   );
-
+  const setUpdatedItemMetadata = useStore(
+    (state) => state.setUpdatedItemMetadata,
+  );
+  const setNewItemMetadata = useStore((state) => state.setNewItemMetadata);
   const [loadingDashboardItems, setLoadingDashboardItems] =
     useState<boolean>(true);
   const [errorState, setErrorState] = useState<boolean>(false);
@@ -45,6 +51,39 @@ export const useItemListData = (viewId: string) => {
   const [viewsBreadcrum, setViewsBreadcrum] = useState<ViewItemPropertyType[]>(
     [],
   );
+
+  useEffect(() => {
+    if (
+      newItemMetadata &&
+      activeView?.item_type === newItemMetadata.item_type
+    ) {
+      setItemMetadata([newItemMetadata, ...itemsMetadata]);
+      setNewItemMetadata(null);
+    }
+  }, [newItemMetadata]);
+
+  useEffect(() => {
+    if (
+      removeItemMetadata &&
+      activeView?.item_type === removeItemMetadata.item_type
+    ) {
+      setItemMetadata(
+        itemsMetadata.filter((item) => item.id !== removeItemMetadata.id),
+      );
+      setNewItemMetadata(null);
+    }
+  }, [removeItemMetadata]);
+
+  useEffect(() => {
+    if (updatedItemMetadata) {
+      setItemMetadata(
+        itemsMetadata.map((item) =>
+          item.id === updatedItemMetadata.id ? updatedItemMetadata : item,
+        ),
+      );
+      setUpdatedItemMetadata(null);
+    }
+  }, [updatedItemMetadata]);
 
   useEffect(() => {
     if (

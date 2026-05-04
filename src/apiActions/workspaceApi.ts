@@ -37,9 +37,9 @@ export const workspaceApi = {
       },
     });
   },
-  addUserToWorkspace: async function (userId: string, roleId: string) {
-    const workspaceId = getWorkspaceId();
-    const url = new URL(`${API_SERVER_V1}/${workspaceId}/workspaces/new-user`);
+  addUserToWorkspace: async function (workspaceId: string, userId: string, roleId: string) {
+    const selectedWorkspaceId = getWorkspaceId();
+    const url = new URL(`${API_SERVER_V1}/${selectedWorkspaceId}/workspaces/new-user`);
 
     return await CallApiNew({
       URL: url,
@@ -47,6 +47,7 @@ export const workspaceApi = {
       BODY: {
         user_id: userId,
         role_id: roleId,
+        workspace_id: workspaceId,
       },
       HEADERS: {
         "Content-Type": "application/json",
@@ -65,6 +66,23 @@ export const workspaceApi = {
       BODY: {
         workspace_id: workspaceId,
         item_id: itemId,
+      },
+      HEADERS: {
+        "Content-Type": "application/json",
+      },
+    });
+  },
+  fetchWorkspaceUsers: async function (workspaceId: string) {
+    const selectedWorkspaceId = getWorkspaceId();
+    const url = new URL(
+      `${API_SERVER_V1}/${selectedWorkspaceId}/workspaces/users`,
+    );
+
+    return await CallApiNew({
+      URL: url,
+      METHOD: "POST",
+      BODY: {
+        workspace_id: workspaceId,
       },
       HEADERS: {
         "Content-Type": "application/json",

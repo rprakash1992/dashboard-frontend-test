@@ -93,11 +93,12 @@ const leftSideNavItems: { [key: string]: NavItem } = {
     // icon: VCJobsIcon,
     itemType: "job",
   },
-  // {
-  //   id: "roles",
-  //   label: "Roles",
-  //   route: "/roles",
-  // },
+  role: {
+    id: "roles",
+    label: "Roles",
+    route: "/roles",
+    itemType: "role",
+  },
 };
 
 const Views = ({ itemType }: { itemType: string }) => {

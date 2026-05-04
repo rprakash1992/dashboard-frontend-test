@@ -21,6 +21,9 @@ export const Image = ({ itemId, itemType, itemImage }: ImagesType) => {
   const [loading, setLoading] = useState<boolean>(false);
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   const addReloadComponent = useStore((state) => state.addReloadComponent);
+  const setUpdatedItemMetadata = useStore(
+    (state) => state.setUpdatedItemMetadata,
+  );
 
   useEffect(() => {
     (async () => {
@@ -71,7 +74,7 @@ export const Image = ({ itemId, itemType, itemImage }: ImagesType) => {
 
       // const fileUrl = `${baseItemImageUrl}/${fileKey}`;
 
-      const { error: itemerr } = await itemApi?.updateItemMetadata(
+      const { data, error: itemerr } = await itemApi?.updateItemMetadata(
         itemId,
         itemType,
         "image",
@@ -93,7 +96,11 @@ export const Image = ({ itemId, itemType, itemImage }: ImagesType) => {
       // setImage(fileUrl);
       setImage(downloadUrl);
       setDialogBoxMsg("Image updated successfully", AlertMsgType.SUCCESS);
-      addReloadComponent(itemType)
+      setUpdatedItemMetadata({
+        ...data,
+        image: downloadUrl,
+      });
+      // addReloadComponent(itemType);
     } catch (error) {
       setDialogBoxMsg(
         "An error occurred while uploading the image",

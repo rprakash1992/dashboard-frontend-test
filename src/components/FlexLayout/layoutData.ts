@@ -66,6 +66,14 @@ export const layoutData: any = {
         },
         {
           borderWidth: 265,
+          component: "roles",
+          enableClose: false,
+          id: "#a3r57geq-x8ml-d6j1-mtv7-l0pcl0dg57nw",
+          name: "Roles",
+          type: "tab",
+        },
+        {
+          borderWidth: 265,
           component: "workflows",
           enableClose: false,
           id: "#bb5db468-b1mg-u821-bxva-p80ch018j7i7",

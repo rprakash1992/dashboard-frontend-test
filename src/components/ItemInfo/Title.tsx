@@ -13,7 +13,8 @@ interface TitleProps {
 
 export const Title = ({ itemId, itemType, title }: TitleProps) => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
+  const setUpdatedItemMetadata = useStore((state) => state.setUpdatedItemMetadata);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputData, setInputData] = useState<string>(title);
   const [madeChanges, setMadeChanges] = useState<boolean>(false);
@@ -30,7 +31,7 @@ export const Title = ({ itemId, itemType, title }: TitleProps) => {
   const postTitleChange = async () => {
     setLoading(true);
 
-    const { error } = await itemApi?.updateItemMetadata(
+    const { data, error } = await itemApi?.updateItemMetadata(
       itemId,
       itemType,
       "title",
@@ -46,7 +47,8 @@ export const Title = ({ itemId, itemType, title }: TitleProps) => {
     setMadeChanges(false);
     setDialogBoxMsg("Title updated.", AlertMsgType.SUCCESS);
     setLoading(false);
-    addReloadComponent(itemType)
+    // addReloadComponent(itemType)
+    setUpdatedItemMetadata(data)
   };
 
   const handleKeyPress = async (

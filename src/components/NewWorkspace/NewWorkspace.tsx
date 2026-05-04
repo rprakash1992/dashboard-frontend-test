@@ -11,7 +11,8 @@ const NewWorkspace = () => {
   const myWorkspaces = useStore((state) => state.myWorkspaces);
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   const setMyWorkspaces = useStore((state) => state.setMyWorkspaces);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
+  const setNewItemMetadata = useStore((state) => state.setNewItemMetadata);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
@@ -40,8 +41,8 @@ const NewWorkspace = () => {
       setTitle("");
       setDescription("");
       setDialogBoxMsg("Workspace created.", AlertMsgType.SUCCESS);
-
-      addReloadComponent("workspace");
+      setNewItemMetadata(data);
+      // addReloadComponent("workspace");
     } catch (error) {
       console.error(error);
       setDialogBoxMsg(String(error), AlertMsgType.ERROR);

@@ -12,8 +12,9 @@ import { FileUploadStatusEnum } from "../../store/fileSlice";
 
 const NewFile = () => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
   const addUpdateFileUpload = useStore((state) => state.addUpdateFileUpload);
+  const setNewItemMetadata = useStore((state) => state.setNewItemMetadata);
   const [loadingAddItem, setLoadingAddItem] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [fileTitle, setFileTitle] = useState<string>("");
@@ -53,7 +54,8 @@ const NewFile = () => {
 
       resetData();
       setDialogBoxMsg("File added successfully", AlertMsgType.SUCCESS);
-      addReloadComponent("file");
+      // addReloadComponent("file");
+      setNewItemMetadata(fileData.item);
     } catch (error) {
       console.error(error);
       setDialogBoxMsg(String(error), AlertMsgType.ERROR);

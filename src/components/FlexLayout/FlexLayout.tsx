@@ -41,6 +41,7 @@ import {
   VCJobsInfoIcon,
   VCWorkflowIcon,
   VCSearchIcon,
+  VCRoleIcon,
 } from "../../assets/icons";
 
 import "./styles.css";
@@ -53,6 +54,7 @@ import { LoadingComponent } from "../LoadingComponent/LoadingComponent";
 import Views from "../Views/Views";
 import { ProfileAvatar } from "../ProfileAvatar/ProfileAvatar";
 import { SearchItems } from "../SearchItems";
+import { Permissions } from "../Permissions";
 const MediaViewer = lazy(() => import("../media-viewer/MediaViewer"));
 const DashboardsList = lazy(() => import("../Dashboards/Dashboards"));
 const ItemList = lazy(() => import("../ItemList/ItemList"));
@@ -135,6 +137,8 @@ const getItemListTabIcon = (routePath: string) => {
     return { icon: VCWorkspaceIcon, label: "Workspaces" };
   } else if (routePath.includes("/users")) {
     return { icon: VCUserProfilesIcon, label: "Users" };
+  } else if (routePath.includes("/roles")) {
+    return { icon: VCRoleIcon, label: "Roles" };
   } else if (routePath.includes("/jobs")) {
     return { icon: VCJobsIcon, label: "Jobs" };
   } else if (routePath.includes("/workflows")) {
@@ -176,6 +180,7 @@ const routeToTab: any = {
   "/job-info": "jobInfo",
   "/create-workflow": "createWorkflow",
   "/ai-assistant": "ai_assistant",
+  "/permissions": "permissions"
 };
 
 const model = Model.fromJson(layoutData as any);
@@ -468,6 +473,12 @@ export const FlexLayout = () => {
           <CreateWorkflow itemId={id} />
         </Suspense>
       );
+    } else if (component === "permissions") {
+      return (
+        <Suspense fallback={<LoadingComponent />}>
+          <Permissions itemId={id} />
+        </Suspense>
+      );
     } else if (component === "files") {
       return (
         <Suspense fallback={<LoadingComponent />}>
@@ -496,6 +507,12 @@ export const FlexLayout = () => {
       return (
         <Suspense fallback={<LoadingComponent />}>
           <Views itemType="user_profile" />
+        </Suspense>
+      );
+    } else if (component === "roles") {
+      return (
+        <Suspense fallback={<LoadingComponent />}>
+          <Views itemType="role" />
         </Suspense>
       );
     } else if (component === "workflows") {
@@ -650,6 +667,11 @@ export const FlexLayout = () => {
     if (component === "users") {
       renderValues.content = (
         <BorderTabComponent tooltipText="Users" icon={VCUserProfilesIcon} />
+      );
+    }
+    if (component === "roles") {
+      renderValues.content = (
+        <BorderTabComponent tooltipText="Roles" icon={VCRoleIcon} />
       );
     }
     if (component === "workflows") {

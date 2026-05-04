@@ -57,7 +57,8 @@ const NewProject = () => {
   const projectSchemas = useStore((state) => state.modelSchemas);
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   const setProjectSchemas = useStore((state) => state.setModelSchemas);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
+  const setNewItemMetadata = useStore((state) => state.setNewItemMetadata);
   const [newProjectItem, setNewProjectItem] = useState<NewProjectItemType>({
     title: "New Project",
     fileSourceItem: {},
@@ -174,14 +175,15 @@ const NewProject = () => {
     try {
       setIsBtnLoading(true);
 
-      const { error: projectErr } = await projectApi.insertProject(
-        newProjectItem.title,
-        description,
-        "",
-        categories,
-        data.fileSource.id,
-        data,
-      );
+      const { data: newProjectData, error: projectErr } =
+        await projectApi.insertProject(
+          newProjectItem.title,
+          description,
+          "",
+          categories,
+          data.fileSource.id,
+          data,
+        );
 
       if (projectErr) {
         console.error(projectErr);
@@ -196,7 +198,8 @@ const NewProject = () => {
       setDescription("");
       setCategories([]);
       setDialogBoxMsg("Project added.", AlertMsgType.SUCCESS);
-      addReloadComponent("project");
+      setNewItemMetadata(newProjectData.item);
+      // addReloadComponent("project");
     } catch (error) {
       console.error(error, "error");
       setDialogBoxMsg(String(error), AlertMsgType.ERROR);

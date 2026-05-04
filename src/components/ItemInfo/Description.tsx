@@ -18,7 +18,8 @@ export const Description = ({
   description,
 }: DescriptionType) => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
+  const setUpdatedItemMetadata = useStore((state) => state.setUpdatedItemMetadata);
   const [loading, setLoading] = useState<boolean>(false);
   const [descriptionData, setDescriptionData] = useState<string | null>(
     description,
@@ -32,7 +33,7 @@ export const Description = ({
 
   const handleDescriptionSave = async () => {
     setLoading(true);
-    const { error } = await itemApi?.updateItemMetadata(
+    const { data, error } = await itemApi?.updateItemMetadata(
       itemId,
       itemType,
       "description",
@@ -49,7 +50,8 @@ export const Description = ({
     setMadeChanges(false);
     setDialogBoxMsg("Description updated.", AlertMsgType.SUCCESS);
     setLoading(false);
-    addReloadComponent(itemType)
+    setUpdatedItemMetadata(data);
+    // addReloadComponent(itemType);
   };
 
   const handleInputChange = (val: string) => {

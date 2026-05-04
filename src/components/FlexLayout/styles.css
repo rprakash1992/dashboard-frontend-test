@@ -65,6 +65,6 @@
 }
 
 /* Push bottom tabs down — nth-child = index of the first tab that should appear at the bottom */
-.flexlayout__border_inner_tab_container_left .flexlayout__border_button:nth-child(21) {
+.flexlayout__border_inner_tab_container_left .flexlayout__border_button:nth-child(23) {
   margin-right: auto;
 }

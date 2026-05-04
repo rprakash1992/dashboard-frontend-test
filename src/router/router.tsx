@@ -78,6 +78,7 @@ export const Router = () => {
           <Route path="job-info" element={<></>} />
           <Route path="create-workflow" element={<></>} />
           <Route path="ai-assistant" element={<></>} />
+          <Route path="permissions" element={<></>} />
         </Route>
         <Route path="auth/callback" element={<DevAuthCallback />} />
         <Route path="*" element={<PageNotFound />} />
