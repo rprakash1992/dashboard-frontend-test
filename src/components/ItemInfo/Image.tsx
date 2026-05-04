@@ -20,7 +20,7 @@ export const Image = ({ itemId, itemType, itemImage }: ImagesType) => {
   const [image, setImage] = useState<string>(itemImage);
   const [loading, setLoading] = useState<boolean>(false);
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
-  const addReloadComponent = useStore((state) => state.addReloadComponent);
+  // const addReloadComponent = useStore((state) => state.addReloadComponent);
   const setUpdatedItemMetadata = useStore(
     (state) => state.setUpdatedItemMetadata,
   );
