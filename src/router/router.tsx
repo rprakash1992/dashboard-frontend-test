@@ -79,9 +79,7 @@ export const Router = () => {
           <Route path="create-workflow" element={<></>} />
           <Route path="ai-assistant" element={<></>} />
         </Route>
-        {isDevMode && (
-          <Route path="auth/callback" element={<DevAuthCallback />} />
-        )}
+        <Route path="auth/callback" element={<DevAuthCallback />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <DialogBox />
