@@ -9,12 +9,21 @@ interface TitleProps {
   itemId: string;
   itemType: string;
   title: string;
+  updateItemTitle: (title: string) => void;
 }
 
-export const Title = ({ itemId, itemType, title }: TitleProps) => {
+export const Title = ({
+  itemId,
+  itemType,
+  title,
+  updateItemTitle,
+}: TitleProps) => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   // const addReloadComponent = useStore((state) => state.addReloadComponent);
-  const setUpdatedItemMetadata = useStore((state) => state.setUpdatedItemMetadata);
+  const setUpdatedItemMetadata = useStore(
+    (state) => state.setUpdatedItemMetadata,
+  );
+  const setUpdatedTabData = useStore((state) => state.setUpdatedTabData);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputData, setInputData] = useState<string>(title);
   const [madeChanges, setMadeChanges] = useState<boolean>(false);
@@ -48,7 +57,12 @@ export const Title = ({ itemId, itemType, title }: TitleProps) => {
     setDialogBoxMsg("Title updated.", AlertMsgType.SUCCESS);
     setLoading(false);
     // addReloadComponent(itemType)
-    setUpdatedItemMetadata(data)
+    setUpdatedItemMetadata(data);
+    setUpdatedTabData({
+      id: `item_info-${itemId}`,
+      name: inputData,
+    });
+    updateItemTitle(inputData);
   };
 
   const handleKeyPress = async (

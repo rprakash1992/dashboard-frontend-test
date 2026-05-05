@@ -9,21 +9,23 @@ import { AlertMsgType } from "../../store/actionSlice";
 interface DescriptionType {
   itemId: string;
   itemType: string;
-  description: string | null;
+  description: string;
+  updateItemDesc: (desc: string) => void;
 }
 
 export const Description = ({
   itemId,
   itemType,
   description,
+  updateItemDesc,
 }: DescriptionType) => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   // const addReloadComponent = useStore((state) => state.addReloadComponent);
-  const setUpdatedItemMetadata = useStore((state) => state.setUpdatedItemMetadata);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [descriptionData, setDescriptionData] = useState<string | null>(
-    description,
+  const setUpdatedItemMetadata = useStore(
+    (state) => state.setUpdatedItemMetadata,
   );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [descriptionData, setDescriptionData] = useState<string>(description);
   const [madeChanges, setMadeChanges] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -52,6 +54,7 @@ export const Description = ({
     setLoading(false);
     setUpdatedItemMetadata(data);
     // addReloadComponent(itemType);
+    updateItemDesc(descriptionData);
   };
 
   const handleInputChange = (val: string) => {

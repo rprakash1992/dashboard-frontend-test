@@ -73,11 +73,13 @@ const ItemInfo = ({ itemId }: ItemInfoProps) => {
             itemId={itemId}
             itemType={item.item_type}
             title={item.title ?? ""}
+            updateItemTitle={(title) => setItem({ ...item, title })}
           />
           <Description
             itemId={itemId}
             itemType={item.item_type}
             description={item.description ?? ""}
+            updateItemDesc={(description) => setItem({ ...item, description })}
           />
           <Image
             itemId={itemId}

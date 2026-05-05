@@ -55,6 +55,7 @@ import Views from "../Views/Views";
 import { ProfileAvatar } from "../ProfileAvatar/ProfileAvatar";
 import { SearchItems } from "../SearchItems";
 import { Permissions } from "../Permissions";
+import type { UpdatedTabData } from "../../store/actionSlice";
 const MediaViewer = lazy(() => import("../media-viewer/MediaViewer"));
 const DashboardsList = lazy(() => import("../Dashboards/Dashboards"));
 const ItemList = lazy(() => import("../ItemList/ItemList"));
@@ -180,7 +181,7 @@ const routeToTab: any = {
   "/job-info": "jobInfo",
   "/create-workflow": "createWorkflow",
   "/ai-assistant": "ai_assistant",
-  "/permissions": "permissions"
+  "/permissions": "permissions",
 };
 
 const model = Model.fromJson(layoutData as any);
@@ -188,6 +189,8 @@ const model = Model.fromJson(layoutData as any);
 export const FlexLayout = () => {
   const tabIdToDelete = useStore((state) => state.tabIdToDelete);
   const userProfile = useStore((state) => state.userProfile);
+  const updatedTabData = useStore((state) => state.updatedTabData);
+  const setUpdatedTabData = useStore((state) => state.setUpdatedTabData);
   // const reloadComponent = useStore((state) => state.reloadComponent);
   // const setReloadComponent = useStore((state) => state.setReloadComponent);
   const layoutRef = useRef<any>(null);
@@ -264,6 +267,12 @@ export const FlexLayout = () => {
       deleteTab(tabIdToDelete);
     }
   }, [tabIdToDelete]);
+
+  useEffect(() => {
+    if (updatedTabData) {
+      updateTab(updatedTabData);
+    }
+  }, [updatedTabData]);
 
   // useEffect(() => {
   //   if (reloadComponent) {
@@ -1003,6 +1012,45 @@ export const FlexLayout = () => {
       // model.doAction(Actions.addNode(newTab, tabId, DockLocation.TOP, 0, true));
       layoutRef.current.addTabToActiveTabSet(newTab);
     }
+  };
+
+  const updateTab = (tabData: UpdatedTabData) => {
+    let existingTab: any = null;
+
+    // Find if tab already exists
+    model.visitNodes((node: any) => {
+      if (node.getType() === "tab" && node.getId() === tabData?.id) {
+        existingTab = node;
+      }
+    });
+
+    if (existingTab) {
+      // const config = existingTab.getConfig();
+      // const fullRoutePath = config?.fullRoutePath;
+      console.log({ path: existingTab.getConfig().fullRoutePath });
+
+      const url = new URL(
+        existingTab.getConfig().fullRoutePath,
+        window.location.origin,
+      );
+      url.searchParams.set("tabTitle", tabData.name);
+      const newFullRoutePath = url.pathname + "?" + url.searchParams.toString();
+
+      // const url = new URL(existingTab.getConfig().fullRoutePath);
+      // url.searchParams.set("tabTitle", tabData.name);
+      // const newFullRoutePath = url.toString();
+
+      model.doAction(
+        Actions.updateNodeAttributes(existingTab.getId(), {
+          name: tabData?.name,
+          config: {
+            id: existingTab.getConfig().id,
+            fullRoutePath: newFullRoutePath,
+          },
+        }),
+      );
+    }
+    setUpdatedTabData(null);
   };
 
   return (

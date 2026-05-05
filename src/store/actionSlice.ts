@@ -17,6 +17,11 @@ export interface DialogBoxMsgType {
   msgDuration?: number;
 }
 
+export interface UpdatedTabData {
+  id: string;
+  name: string;
+}
+
 const initialState = {
   profilePending: false,
   dialogBoxMsgList: [],
@@ -24,6 +29,7 @@ const initialState = {
   tabIdToDelete: "",
   reloadComponents: [],
   showBottomStickyAlert: true,
+  updatedTabData: null,
 };
 
 export interface ActionsSlice {
@@ -32,6 +38,7 @@ export interface ActionsSlice {
   tabIdToDelete: string;
   reloadComponents: string[];
   showBottomStickyAlert: boolean;
+  updatedTabData: UpdatedTabData | null;
   setDialogBoxMsg: (
     msgText: string,
     msgType: AlertMsgEnum,
@@ -45,6 +52,7 @@ export interface ActionsSlice {
   addReloadComponent: (componentType: string) => void;
   removeReloadComponent: (componentType: string) => void;
   setShowBottomStickyAlert: (val: boolean) => void;
+  setUpdatedTabData: (tabData: UpdatedTabData | null) => void;
 }
 
 export const createActionsSlice: StateCreator<
@@ -127,4 +135,7 @@ export const createActionsSlice: StateCreator<
         showBottomStickyAlert: val,
       };
     }),
+  setUpdatedTabData: (val) => {
+    set({ updatedTabData: val });
+  },
 });
