@@ -22,25 +22,18 @@ const HeadingTitle = ({ title }: { title: string }) => (
 interface RolePermission {
   id: string;
   item_type: string;
-  action: string;
-  sections: string[] | null;
+  scope: string;
+  field: string;
+  can_create: boolean;
+  can_read: boolean;
+  can_update: boolean;
+  can_delete: boolean;
 }
 
 interface PermissionsProps {
   itemId: string;
 }
 
-const ACTION_LABELS: Record<string, string> = {
-  read_items: "Read Items",
-  read_metadata: "Read Metadata",
-  read_contents: "Read Contents",
-  update_metadata: "Update Metadata",
-  update_contents: "Update Contents",
-  delete: "Delete",
-  create: "Create",
-};
-
-// Fixed full permission matrix — all item_types and their applicable actions
 const ALL_ITEM_TYPES = [
   "file",
   "project",
@@ -49,31 +42,15 @@ const ALL_ITEM_TYPES = [
   "user_profile",
   "job",
   "workflow",
+  "role",
 ];
 
-const ALL_ACTIONS = [
-  "read_items",
-  "read_metadata",
-  "read_contents",
-  "update_metadata",
-  "update_contents",
-  "delete",
-  "create",
+const CRUD_COLUMNS: { key: keyof RolePermission; label: string }[] = [
+  { key: "can_create", label: "Create" },
+  { key: "can_read", label: "Read" },
+  { key: "can_update", label: "Update" },
+  { key: "can_delete", label: "Delete" },
 ];
-
-// "all" is always the first section column, followed by named sections
-const SECTION_COLUMNS = ["all", "title", "description", "image", "tags"];
-
-function isSectionChecked(sections: string[] | null, section: string): boolean {
-  if (!sections || sections.length === 0) return false;
-  const isAll = sections[0] === "*";
-  if (section === "all") return isAll;
-  return isAll || sections.includes(section);
-}
-
-function hasSections(sections: string[] | null): boolean {
-  return sections !== null && sections.length > 0;
-}
 
 export const Permissions = ({ itemId }: PermissionsProps) => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
@@ -101,142 +78,99 @@ export const Permissions = ({ itemId }: PermissionsProps) => {
     }
   };
 
-  // Build a lookup: item_type → action → RolePermission (or null if not granted)
+  // Build a lookup: item_type → scope+field key → RolePermission
   const permMap = permissions.reduce<
     Record<string, Record<string, RolePermission>>
   >((acc, perm) => {
     if (!acc[perm.item_type]) acc[perm.item_type] = {};
-    acc[perm.item_type][perm.action] = perm;
+    acc[perm.item_type][`${perm.scope}:${perm.field}`] = perm;
     return acc;
   }, {});
+
+  // Collect scope+field rows per item_type — only fields that belong to that item_type
+  const rowKeysByItemType = permissions.reduce<Record<string, string[]>>(
+    (acc, perm) => {
+      if (!acc[perm.item_type]) acc[perm.item_type] = [];
+      const key = `${perm.scope}:${perm.field}`;
+      if (!acc[perm.item_type].includes(key)) acc[perm.item_type].push(key);
+      return acc;
+    },
+    {},
+  );
 
   if (isLoading) return <LoadingComponent />;
 
   return (
     <MaxWidthContainer>
       <Flex p="xs" direction="column" gap="md">
-        {/* {role && (
-          <Box>
-            <Text fw={600} size="sm">
-              {role.title}
-            </Text>
-            {role.description && (
-              <Text size="xs" c="dimmed">
-                {role.description}
-              </Text>
-            )}
-          </Box>
-        )} */}
-
         <ScrollArea type="auto">
           <Table fz="xs" style={{ minWidth: 480 }}>
             <Table.Thead>
               <Table.Tr>
                 <Table.Th style={{ minWidth: 110 }}>
                   <HeadingTitle title="Item Type" />
-                  {/* Item Type */}
                 </Table.Th>
-                <Table.Th style={{ minWidth: 130 }}>
-                  <HeadingTitle title="Action" />
-                  {/* Action */}
+                <Table.Th style={{ minWidth: 90 }}>
+                  <HeadingTitle title="Scope" />
                 </Table.Th>
-                <Table.Th ta="center" style={{ minWidth: 50 }}>
-                  <HeadingTitle title="Granted" />
-                  {/* Granted */}
+                <Table.Th style={{ minWidth: 100 }}>
+                  <HeadingTitle title="Field" />
                 </Table.Th>
-                {SECTION_COLUMNS.map((s) => (
-                  <Table.Th key={s} ta="center" style={{ minWidth: 72 }}>
-                    <HeadingTitle
-                      title={s.charAt(0).toUpperCase() + s.slice(1)}
-                    />
-                    {/* {s.charAt(0).toUpperCase() + s.slice(1)} */}
+                {CRUD_COLUMNS.map((col) => (
+                  <Table.Th key={col.key} ta="center" style={{ minWidth: 65 }}>
+                    <HeadingTitle title={col.label} />
                   </Table.Th>
                 ))}
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {ALL_ITEM_TYPES.map(
-                (
-                  itemType,
-                  // typeIdx
-                ) => (
-                  <>
-                    {/* {typeIdx > 0 && (
-                    <Table.Tr key={`divider-${itemType}`}>
-                      <Table.Td colSpan={3 + SECTION_COLUMNS.length} p={0}>
-                        <Divider />
+              {ALL_ITEM_TYPES.map((itemType) => {
+                const itemRowKeys = rowKeysByItemType[itemType] ?? [];
+                return itemRowKeys.map((rowKey, rowIdx) => {
+                  const perm = permMap[itemType]?.[rowKey] ?? null;
+                  const [scope, field] = rowKey.split(":");
+                  return (
+                    <Table.Tr key={`${itemType}-${rowKey}`}>
+                      {rowIdx === 0 && (
+                        <Table.Td
+                          rowSpan={itemRowKeys.length}
+                          style={{ verticalAlign: "middle" }}
+                        >
+                          <Text size="xs" fw={500} tt="capitalize">
+                            {itemType.replace(/_/g, " ")}
+                          </Text>
+                        </Table.Td>
+                      )}
+                      <Table.Td c={perm ? undefined : "dimmed"} tt="capitalize">
+                        {scope}
                       </Table.Td>
-                    </Table.Tr>
-                  )} */}
-                    {ALL_ACTIONS.map((action, actionIdx) => {
-                      const granted = permMap[itemType]?.[action] ?? null;
-                      return (
-                        <Table.Tr key={`${itemType}-${action}`}>
-                          {actionIdx === 0 && (
-                            <Table.Td
-                              rowSpan={ALL_ACTIONS.length}
-                              style={{ verticalAlign: "middle" }}
-                            >
-                              <Text size="xs" fw={500} tt="capitalize">
-                                {itemType.replace(/_/g, " ")}
-                              </Text>
-                            </Table.Td>
-                          )}
-                          <Table.Td c={granted ? undefined : "dimmed"}>
-                            {ACTION_LABELS[action] ?? action}
-                          </Table.Td>
-                          <Table.Td
+                      <Table.Td c={perm ? undefined : "dimmed"} tt="capitalize">
+                        {field === "all" ? "∗" : field}
+                      </Table.Td>
+                      {CRUD_COLUMNS.map((col) => (
+                        <Table.Td
+                          key={col.key}
+                          style={{
+                            textAlign: "center",
+                            verticalAlign: "middle",
+                          }}
+                        >
+                          <Checkbox
+                            size="xs"
+                            checked={perm ? !!perm[col.key] : false}
+                            readOnly
                             style={{
-                              textAlign: "center",
-                              verticalAlign: "middle",
+                              pointerEvents: "none",
+                              display: "flex",
+                              justifyContent: "center",
                             }}
-                          >
-                            <Checkbox
-                              size="xs"
-                              checked={!!granted}
-                              readOnly
-                              style={{
-                                pointerEvents: "none",
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            />
-                          </Table.Td>
-                          {SECTION_COLUMNS.map((s) => (
-                            <Table.Td
-                              key={s}
-                              style={{
-                                textAlign: "center",
-                                verticalAlign: "middle",
-                              }}
-                            >
-                              {granted && hasSections(granted.sections) ? (
-                                <Checkbox
-                                  size="xs"
-                                  checked={isSectionChecked(
-                                    granted.sections,
-                                    s,
-                                  )}
-                                  readOnly
-                                  style={{
-                                    pointerEvents: "none",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                  }}
-                                />
-                              ) : (
-                                <Text size="xs" c="dimmed">
-                                  —
-                                </Text>
-                              )}
-                            </Table.Td>
-                          ))}
-                        </Table.Tr>
-                      );
-                    })}
-                  </>
-                ),
-              )}
+                          />
+                        </Table.Td>
+                      ))}
+                    </Table.Tr>
+                  );
+                });
+              })}
             </Table.Tbody>
           </Table>
         </ScrollArea>
