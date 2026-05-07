@@ -15,6 +15,7 @@ const NewFile = () => {
   // const addReloadComponent = useStore((state) => state.addReloadComponent);
   const addUpdateFileUpload = useStore((state) => state.addUpdateFileUpload);
   const setNewItemMetadata = useStore((state) => state.setNewItemMetadata);
+  const setNewFileItem = useStore((state) => state.setNewFileItem);
   const [loadingAddItem, setLoadingAddItem] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [fileTitle, setFileTitle] = useState<string>("");
@@ -56,6 +57,7 @@ const NewFile = () => {
       setDialogBoxMsg("File added successfully", AlertMsgType.SUCCESS);
       // addReloadComponent("file");
       setNewItemMetadata(fileData.item);
+      setNewFileItem(fileData.file);
     } catch (error) {
       console.error(error);
       setDialogBoxMsg(String(error), AlertMsgType.ERROR);

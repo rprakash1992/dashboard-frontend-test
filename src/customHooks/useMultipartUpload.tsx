@@ -2,8 +2,10 @@ import SparkMD5 from "spark-md5";
 import { fileApi } from "../apiActions/fileApi";
 import { API_SERVER_V1 } from "../config/keys";
 import { useStore } from "../store";
+import { getDevToken } from "../utils/auth";
 
 const FILE_UPLOAD_ENDPOINT_URL = `${API_SERVER_V1}/file-upload`;
+const token = getDevToken();
 
 type PartType = {
   id: number;
@@ -155,6 +157,7 @@ export function useMultipartUpload() {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          ...(token ? { "X-Auth-Request-Access-Token": token } : {}),
         },
         body: JSON.stringify(initiateFileUploadPayload),
       },
@@ -185,6 +188,7 @@ export function useMultipartUpload() {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          ...(token ? { "X-Auth-Request-Access-Token": token } : {}),
         },
         body: JSON.stringify(updateFilePartUrlsPayload),
       },
@@ -218,6 +222,7 @@ export function useMultipartUpload() {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          ...(token ? { "X-Auth-Request-Access-Token": token } : {}),
         },
         body: JSON.stringify(updateFilePartsStatusPayload),
       },

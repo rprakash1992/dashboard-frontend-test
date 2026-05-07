@@ -56,6 +56,7 @@ import { ProfileAvatar } from "../ProfileAvatar/ProfileAvatar";
 import { SearchItems } from "../SearchItems";
 import { Permissions } from "../Permissions";
 import type { UpdatedTabData } from "../../store/actionSlice";
+import { NewRole } from "../NewRole/NewRole";
 const MediaViewer = lazy(() => import("../media-viewer/MediaViewer"));
 const DashboardsList = lazy(() => import("../Dashboards/Dashboards"));
 const ItemList = lazy(() => import("../ItemList/ItemList"));
@@ -173,6 +174,7 @@ const routeToTab: any = {
   "/new-project": "new_project",
   "/new-report": "new_report",
   "/new-workspace": "new_workspace",
+  "/new-role": "new_role",
   "/wcxviewer": "wcaxviewer",
   "/epviewer": "enterpriseViewer",
   "/cftviewer": "craftViewer",
@@ -426,6 +428,12 @@ export const FlexLayout = () => {
       return (
         <Suspense fallback={<LoadingComponent />}>
           <NewWorkspace />
+        </Suspense>
+      );
+    } else if (component === "new_role") {
+      return (
+        <Suspense fallback={<LoadingComponent />}>
+          <NewRole />
         </Suspense>
       );
     } else if (component === "item_share") {

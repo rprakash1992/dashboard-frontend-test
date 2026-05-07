@@ -70,8 +70,10 @@ import {
   IconClockPlay,
   IconClockExclamation,
   IconJumpRope,
-  IconAccessible,
-  IconUserKey
+  // IconAccessible,
+  IconUserKey,
+  IconUserPlus,
+  IconAdjustmentsPause
 } from "@tabler/icons-react";
 
 export const VCFileIcon = IconFile;
@@ -81,8 +83,9 @@ export const VCWorkspaceIcon = IconCategory;
 export const VCUserProfilesIcon = IconUsers;
 export const VCJobsIcon = IconClockPlay;
 export const VCWorkflowIcon = IconJumpRope;
-export const VCRoleIcon = IconAccessible;
-export const VCPermissionIcon = IconUserKey;
+// export const VCRoleIcon = IconAccessible;
+export const VCRoleIcon = IconUserKey;
+export const VCPermissionIcon = IconAdjustmentsPause;
 
 export const VCNewFileIcon = IconFilePlus;
 export const VCNewProjectIcon = IconTablePlus;
@@ -92,6 +95,7 @@ export const VCNewWorkspaceIcon = IconCategoryPlus;
 export const VCNewUserProfileIcon = IconUsersPlus;
 // export const VCNewWorkspaceIcon = IconUsersPlus;
 export const VCNewViewIcon = IconEyePlus;
+export const VCNewRoleIcon = IconUserPlus;
 
 export const VCFilterIcon = IconFilter;
 export const VCSortIcon = IconSortAscending;

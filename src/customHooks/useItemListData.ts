@@ -26,6 +26,7 @@ export const useItemListData = (viewId: string) => {
   const fileUploads = useStore((state) => state.fileUploads);
   const updatedItemMetadata = useStore((state) => state.updatedItemMetadata);
   const newItemMetadata = useStore((state) => state.newItemMetadata);
+  const newFileItem = useStore((state) => state.newFileItem);
   const removeItemMetadata = useStore((state) => state.removeItemMetadata);
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   const setFileUploads = useStore((state) => state.setFileUploads);
@@ -36,6 +37,10 @@ export const useItemListData = (viewId: string) => {
     (state) => state.setUpdatedItemMetadata,
   );
   const setNewItemMetadata = useStore((state) => state.setNewItemMetadata);
+  const setNewFileItem = useStore((state) => state.setNewFileItem);
+  const setRemoveItemMetadata = useStore(
+    (state) => state.setRemoveItemMetadata,
+  );
   const [loadingDashboardItems, setLoadingDashboardItems] =
     useState<boolean>(true);
   const [errorState, setErrorState] = useState<boolean>(false);
@@ -57,10 +62,14 @@ export const useItemListData = (viewId: string) => {
       newItemMetadata &&
       activeView?.item_type === newItemMetadata.item_type
     ) {
-      setItemMetadata([newItemMetadata, ...itemsMetadata]);
+      setItemMetadata((prevMetadata) => [newItemMetadata, ...prevMetadata]);
       setNewItemMetadata(null);
+      if (newFileItem) {
+        setFileItems((prevFiles) => [newFileItem, ...prevFiles]);
+        setNewFileItem(null);
+      }
     }
-  }, [newItemMetadata]);
+  }, [newItemMetadata, newFileItem]);
 
   useEffect(() => {
     if (
@@ -70,7 +79,7 @@ export const useItemListData = (viewId: string) => {
       setItemMetadata(
         itemsMetadata.filter((item) => item.id !== removeItemMetadata.id),
       );
-      setNewItemMetadata(null);
+      setRemoveItemMetadata(null);
     }
   }, [removeItemMetadata]);
 

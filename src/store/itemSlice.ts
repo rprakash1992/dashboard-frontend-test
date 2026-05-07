@@ -31,6 +31,7 @@ const initialState = {
   isOpeningItem: null,
   updatedItemMetadata: null,
   newItemMetadata: null,
+  newFileItem: null,
   removeItemMetadata: null,
 };
 
@@ -40,12 +41,14 @@ export interface ItemSlice {
   isOpeningItem: string | null;
   updatedItemMetadata: ItemMetadataType | null;
   newItemMetadata: ItemMetadataType | null;
+  newFileItem: any;
   removeItemMetadata: ItemMetadataType | null;
   setIsDownloadingItem: (val: string | null) => void;
   setIsDeletingItem: (val: string | null) => void;
   setIsOpeningItem: (val: string | null) => void;
   setUpdatedItemMetadata: (val: ItemMetadataType | null) => void;
   setNewItemMetadata: (val: ItemMetadataType | null) => void;
+  setNewFileItem: (val: any) => void;
   setRemoveItemMetadata: (val: ItemMetadataType | null) => void;
 }
 
@@ -70,6 +73,9 @@ export const createItemSlice: StateCreator<
   },
   setNewItemMetadata: (val) => {
     set({ newItemMetadata: val });
+  },
+  setNewFileItem: (val) => {
+    set({ newFileItem: val });
   },
   setRemoveItemMetadata: (val) => {
     set({ removeItemMetadata: val });

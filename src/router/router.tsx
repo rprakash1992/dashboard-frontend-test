@@ -7,7 +7,7 @@ import { PageNotFound } from "./PageNotFound";
 import { AppLayout } from "../components/AppLayout/AppLayout";
 import { DevAuthCallback } from "../pages/DevAuthCallback";
 import { isDevMode } from "../config/keys";
-import { getDevToken, redirectToGoogleLogin } from "../utils/auth";
+import { getDevToken, redirectToGoogleLogin } from "../utils/devAuth";
 
 export const Router = () => {
   const { colorScheme, setColorScheme } = useMantineColorScheme();
@@ -70,6 +70,7 @@ export const Router = () => {
           <Route path="new-project" element={<></>} />
           <Route path="new-report" element={<></>} />
           <Route path="new-workspace" element={<></>} />
+          <Route path="new-role" element={<></>} />
           <Route path="epviewer" element={<></>} />
           <Route path="wcxviewer" element={<></>} />
           <Route path="cftviewer" element={<></>} />

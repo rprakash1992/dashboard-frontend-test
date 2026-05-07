@@ -5,6 +5,7 @@ import {
   VCNewFileIcon,
   VCNewProjectIcon,
   VCNewReportIcon,
+  VCNewRoleIcon,
   VCNewViewIcon,
   VCNewWorkspaceIcon,
 } from "../../assets/icons";
@@ -14,6 +15,7 @@ const newItemIcons: any = {
   project: VCNewProjectIcon,
   report: VCNewReportIcon,
   workspace: VCNewWorkspaceIcon,
+  role: VCNewRoleIcon,
 };
 
 export const ViewHeader = ({

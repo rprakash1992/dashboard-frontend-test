@@ -39,7 +39,7 @@ export const newItemDetails: any = {
   },
   role: {
     id: "new_role",
-    title: "New Item Role",
+    title: "New Role",
   },
 };
 
@@ -140,6 +140,7 @@ const Views = ({ itemType }: { itemType: string }) => {
       new_project: "/new-project",
       new_report: "/new-report",
       new_workspace: "/new-workspace",
+      new_role: "/new-role",
     };
     const route = getRoute[itemId];
     navigate(`${route}?tabId=${itemId}&tabTitle=${itemTitle}`);
