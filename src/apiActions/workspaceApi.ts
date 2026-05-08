@@ -37,9 +37,38 @@ export const workspaceApi = {
       },
     });
   },
-  addUserToWorkspace: async function (workspaceId: string, userId: string, roleId: string) {
+  addUserToWorkspace: async function (
+    workspaceId: string,
+    userId: string,
+    roleId: string,
+  ) {
     const selectedWorkspaceId = getWorkspaceId();
-    const url = new URL(`${API_SERVER_V1}/${selectedWorkspaceId}/workspaces/new-user`);
+    const url = new URL(
+      `${API_SERVER_V1}/${selectedWorkspaceId}/workspaces/new-user`,
+    );
+
+    return await CallApiNew({
+      URL: url,
+      METHOD: "POST",
+      BODY: {
+        user_id: userId,
+        role_id: roleId,
+        workspace_id: workspaceId,
+      },
+      HEADERS: {
+        "Content-Type": "application/json",
+      },
+    });
+  },
+  updateWorkspaceUserRole: async function (
+    workspaceId: string,
+    userId: string,
+    roleId: string,
+  ) {
+    const selectedWorkspaceId = getWorkspaceId();
+    const url = new URL(
+      `${API_SERVER_V1}/${selectedWorkspaceId}/workspaces/update-user`,
+    );
 
     return await CallApiNew({
       URL: url,

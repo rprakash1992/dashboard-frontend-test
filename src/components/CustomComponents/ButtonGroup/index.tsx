@@ -34,15 +34,16 @@ export const ButtonGroup = ({
         onClick={onSecondaryClick}
         disabled={loading || secondaryDisabled}
       >
-        { secondaryText ?? "Cancel" }
+        {secondaryText ?? "Cancel"}
       </Button>
       <Button
+        variant="default"
         onClick={loading ? () => {} : onPrimaryClick}
         loading={loading}
         disabled={primaryDisabled}
         style={{ marginLeft: "10px" }}
       >
-        { primaryText ?? "Add" }
+        {primaryText ?? "Add"}
       </Button>
     </Box>
   );

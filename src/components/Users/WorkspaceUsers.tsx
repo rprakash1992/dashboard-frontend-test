@@ -12,9 +12,15 @@ import { AlertMsgType } from "../../store/actionSlice";
 import { LoadingComponent } from "../LoadingComponent/LoadingComponent";
 import { SubmitButton } from "../common/SubmitButton/SubmitButton";
 import { MaxWidthContainer } from "../common/MaxWidthContainer/MaxWidthContainer";
+import { ButtonGroup } from "../CustomComponents/ButtonGroup";
 
 interface WorkspaceUsersProps {
   itemId: string;
+}
+
+interface WorkspaceUser {
+  user: ItemMetadataType;
+  role: ItemMetadataType;
 }
 
 export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
@@ -22,13 +28,15 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
   const setDialogBoxMsg = useStore((state) => state.setDialogBoxMsg);
   // const myWorkspaces = useStore((state) => state.myWorkspaces);
   const [loadingAddUser, setLoadingAddUser] = useState<boolean>(false);
-  const [workspaceUsers, setWorkspaceUsers] = useState<ItemMetadataType[]>([]);
+  const [workspaceUsers, setWorkspaceUsers] = useState<WorkspaceUser[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchData, setSearchData] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [isFetchingUsers, setIsFecthingUsers] = useState<boolean>(true);
+  const [isUpdateMode, setIsUpdateMode] = useState<boolean>(false);
+  const [isUpdatingRole, setIsUpdatingRole] = useState<boolean>(false);
   // const workspaceId = getWorkspaceId();
 
   // const selectedWorkspace = myWorkspaces.find(
@@ -47,7 +55,7 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
   }, [itemId]);
 
   useEffect(() => {
-    if (searchValue) {
+    if (searchValue && !isUpdateMode) {
       setIsSearching(true);
       debouncedSearch(searchValue);
     } else {
@@ -68,7 +76,6 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
 
       setWorkspaceUsers(data);
     } catch (error) {
-      console.error(error);
       setDialogBoxMsg(String(error), AlertMsgType.ERROR);
     } finally {
       setIsFecthingUsers(false);
@@ -136,6 +143,67 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
     }
   };
 
+  const handleUserClick = (user: ItemMetadataType, role: ItemMetadataType) => {
+    console.log({ user });
+    setSearchValue(user.title);
+    setSelectedUserId(user.id);
+    setSelectedRoleId(role.id);
+    setIsUpdateMode(true);
+  };
+
+  const handleCancelUpdate = () => {
+    setSearchValue("");
+    setSelectedUserId(null);
+    setSelectedRoleId(null);
+    setIsUpdateMode(false);
+  };
+
+  const handleUpdateRole = async () => {
+    if (!selectedUserId) {
+      return setDialogBoxMsg("Select a user", AlertMsgType.ERROR);
+    }
+    if (!selectedRoleId) {
+      return setDialogBoxMsg("Select a role", AlertMsgType.ERROR);
+    }
+
+    try {
+      setIsUpdatingRole(true);
+      const { data, error } = await workspaceApi.updateWorkspaceUserRole(
+        itemId,
+        selectedUserId,
+        selectedRoleId,
+      );
+
+      if (error) {
+        return setDialogBoxMsg(String(error), AlertMsgType.ERROR);
+      }
+
+      const user: ItemMetadataType = data.user;
+      const role: ItemMetadataType = data.role;
+
+      setWorkspaceUsers((prev) =>
+        prev.map((ws) => {
+          if (String(ws.user.id) === String(user.id)) {
+            return {
+              user,
+              role,
+            };
+          } else {
+            return ws;
+          }
+        }),
+      );
+      setSelectedUserId(null);
+      setSearchValue("");
+      setSelectedRoleId(null);
+      setDialogBoxMsg("Role updated successfully.", AlertMsgType.SUCCESS);
+    } catch (error) {
+      setDialogBoxMsg(String(error), AlertMsgType.ERROR);
+    } finally {
+      setIsUpdatingRole(false);
+    }
+  };
+
   if (isFetchingUsers) {
     return <LoadingComponent />;
   }
@@ -144,12 +212,14 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
     <MaxWidthContainer>
       <Flex p="xs" h="100%" direction="column" justify="space-between">
         <Box>
-          {workspaceUsers.map((workspaceUser) => (
+          {workspaceUsers.map(({ user, role }) => (
             <InfoPanel
-              keyName={workspaceUser.id}
-              title={workspaceUser.title}
+              keyName={user.id}
+              title={user.title}
+              subTitle={role.title}
               showCheckIcon={false}
               showCrossIcon={false}
+              onClick={() => handleUserClick(user, role)}
             />
           ))}
         </Box>
@@ -180,12 +250,22 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
             mb="10px"
             mt={0}
           />
-          <SubmitButton
-            label="Add"
-            onSubmit={addUser}
-            isLoading={loadingAddUser}
-            isDisabled={loadingAddUser}
-          />
+          {isUpdateMode ? (
+            <ButtonGroup
+              loading={isUpdatingRole}
+              primaryText="Update"
+              secondaryText="Cancel"
+              onPrimaryClick={handleUpdateRole}
+              onSecondaryClick={handleCancelUpdate}
+            />
+          ) : (
+            <SubmitButton
+              label="Add"
+              onSubmit={addUser}
+              isLoading={loadingAddUser}
+              isDisabled={loadingAddUser}
+            />
+          )}
         </Box>
         {/* )} */}
       </Flex>

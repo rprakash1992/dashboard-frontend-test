@@ -24,20 +24,27 @@ export const useItemActions = (fileItems: File[]) => {
   };
 
   const handleDeleteItem = async (item: ItemMetadataType) => {
-    if (item.item_type === "file") {
-      const isFolderItem = !!fileItems.find((file) => file.parent === item.id);
-      if (isFolderItem) {
-        // folder delete not yet implemented
-        return;
+    try {
+      if (item.item_type === "file") {
+        const isFolderItem = !!fileItems.find(
+          (file) => file.parent === item.id,
+        );
+        if (isFolderItem) {
+          // folder delete not yet implemented
+          return;
+        }
       }
+      setIsDeletingItem(item.id);
+      const { error } = await itemApi.deleteItemById(item.id, item.item_type);
+      if (error) return setDialogBoxMsg(error, AlertMsgType.ERROR);
+      setDialogBoxMsg("Item deleted successfully.", AlertMsgType.SUCCESS);
+      setRemoveItemMetadata(item);
+      // addReloadComponent(item.item_type);
+    } catch (error) {
+      setDialogBoxMsg(String(error), AlertMsgType.ERROR);
+    } finally {
+      setIsDeletingItem(null);
     }
-    setIsDeletingItem(item.id);
-    const { error } = await itemApi.deleteItemById(item.id, item.item_type);
-    if (error) return setDialogBoxMsg(error, AlertMsgType.ERROR);
-    setDialogBoxMsg("Item deleted successfully.", AlertMsgType.SUCCESS);
-    setRemoveItemMetadata(item);
-    // addReloadComponent(item.item_type);
-    setIsDeletingItem(null);
   };
 
   const downloadWrapper = async (item: ItemMetadataType) => {

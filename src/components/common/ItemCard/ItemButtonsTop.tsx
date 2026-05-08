@@ -76,6 +76,7 @@ ItemButtonsTopProps) => {
         itemType === "project" ||
         itemType === "report" ||
         itemType === "workspace" ||
+        itemType === "role" ||
         itemType === "workflow" ||
         itemType === "job") && (
         <IconRenderer
