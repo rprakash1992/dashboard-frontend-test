@@ -195,7 +195,8 @@ export const WorkspaceUsers = ({ itemId }: WorkspaceUsersProps) => {
       );
       setSelectedUserId(null);
       setSearchValue("");
-      setSelectedRoleId(null);
+      // setSelectedRoleId(null);
+      setIsUpdateMode(false);
       setDialogBoxMsg("Role updated successfully.", AlertMsgType.SUCCESS);
     } catch (error) {
       setDialogBoxMsg(String(error), AlertMsgType.ERROR);
